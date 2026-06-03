@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - BebekCarok</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+
+            min-height:100vh;
+
+            background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop');
+
+            background-size:cover;
+            background-position:center;
+        }
+
+        .overlay{
+
+            min-height:100vh;
+
+            background:rgba(0,0,0,0.6);
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            padding:20px;
+        }
+
+        .payment-container{
+
+            width:500px;
+
+            background:rgba(255,255,255,0.15);
+
+            backdrop-filter:blur(15px);
+
+            border-radius:20px;
+
+            padding:30px;
+
+            color:white;
+        }
+
+        h1{
+
+            text-align:center;
+
+            margin-bottom:25px;
+        }
+
+        .order-summary{
+
+            background:rgba(255,255,255,0.1);
+
+            padding:15px;
+
+            border-radius:10px;
+
+            margin-bottom:20px;
+        }
+
+        .order-summary p{
+
+            margin:10px 0;
+        }
+
+        .form-group{
+
+            margin-bottom:20px;
+        }
+
+        .form-group label{
+
+            display:block;
+
+            margin-bottom:8px;
+        }
+
+        .form-group select{
+
+            width:100%;
+
+            padding:12px;
+
+            border:none;
+
+            border-radius:10px;
+        }
+
+        .pay-btn{
+
+            width:100%;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:10px;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            background:white;
+
+            color:black;
+        }
+
+        .back-btn{
+
+            display:block;
+
+            text-align:center;
+
+            margin-top:20px;
+
+            color:white;
+
+            text-decoration:none;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="overlay">
+
+        <div class="payment-container">
+
+            <h1>Payment</h1>
+
+            <div class="order-summary">
+
+                <p>
+                    <strong>Total Amount:</strong>
+                    Rp <span id="paymentTotal"></span>
+                </p>
+
+            </div>
+
+            <form action="/payment" method="POST">
+
+                <div class="form-group">
+
+                    <label>Payment Method</label>
+
+                    <select name="payment_method">
+
+                        <option value="Cash">
+                            Cash
+                        </option>
+
+                        <option value="QRIS">
+                            QRIS
+                        </option>
+
+                        <option value="Bank Transfer">
+                            Bank Transfer
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="pay-btn"
+                >
+                    Confirm Payment
+                </button>
+
+            </form>
+
+            <a
+                href="checkout.html"
+                class="back-btn"
+            >
+                ← Back To Checkout
+            </a>
+
+        </div>
+
+    </div>
+    <script>
+        document.getElementById('paymentTotal')
+            .innerText =
+            localStorage.getItem('paymentTotal');
+    </script>
+
+</body>
+</html>

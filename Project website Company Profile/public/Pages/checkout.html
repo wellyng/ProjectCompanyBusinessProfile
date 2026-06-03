@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - BebekCarok</title>
+
+    <link rel="stylesheet" href="../style.css">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial,sans-serif;
+        }
+
+        body{
+
+            background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop');
+            background-size:cover;
+            background-position:center;
+            min-height:100vh;
+        }
+
+        .overlay{
+
+            background:rgba(0,0,0,0.6);
+            min-height:100vh;
+            padding:40px;
+        }
+
+        .checkout-container{
+
+            max-width:1000px;
+            margin:auto;
+
+            background:rgba(255,255,255,0.15);
+
+            backdrop-filter:blur(10px);
+
+            border-radius:20px;
+
+            padding:30px;
+
+            color:white;
+        }
+
+        h1{
+
+            text-align:center;
+
+            margin-bottom:30px;
+        }
+
+        table{
+
+            width:100%;
+
+            border-collapse:collapse;
+
+            margin-bottom:30px;
+        }
+
+        table th,
+        table td{
+
+            border:1px solid rgba(255,255,255,0.3);
+
+            padding:12px;
+
+            text-align:center;
+        }
+
+        table th{
+
+            background:rgba(255,255,255,0.2);
+        }
+
+        .customer-form{
+
+            display:grid;
+
+            gap:15px;
+
+            margin-top:20px;
+        }
+
+        .customer-form input{
+
+            padding:12px;
+
+            border:none;
+
+            border-radius:10px;
+
+            outline:none;
+        }
+
+        .total-box{
+
+            margin-top:20px;
+
+            text-align:right;
+
+            font-size:24px;
+
+            font-weight:bold;
+        }
+
+        .checkout-btn{
+
+            width:100%;
+
+            margin-top:25px;
+
+            padding:15px;
+
+            border:none;
+
+            border-radius:10px;
+
+            cursor:pointer;
+
+            font-size:18px;
+
+            font-weight:bold;
+
+            background:white;
+
+            color:black;
+        }
+
+        .checkout-btn:hover{
+
+            transform:scale(1.02);
+        }
+
+        .back-btn{
+
+            display:block;
+
+            text-align:center;
+
+            margin-top:20px;
+
+            color:white;
+
+            text-decoration:none;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="overlay">
+
+        <div class="checkout-container">
+
+            <h1>Checkout Order</h1>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Menu</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="cartTable">
+
+                </tbody>
+
+            </table>
+
+            <div class="total-box">
+
+                Total: Rp <span id="totalPrice">0</span>
+
+            </div>
+
+            <form class="customer-form">
+
+                <input
+                    type="text"
+                    placeholder="Customer Name"
+                    required
+                >
+
+                <input
+                    type="email"
+                    placeholder="Email"
+                    required
+                >
+
+                <input
+                    type="text"
+                    placeholder="Phone Number"
+                    required
+                >
+
+                <input
+                    type="text"
+                    placeholder="Address"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="checkout-btn"
+                >
+                    Place Order
+                </button>
+
+
+            </form>
+
+            <a
+                href="../index2.html"
+                class="back-btn"
+            >
+                ← Back To Menu
+            </a>
+
+        </div>
+
+    </div>
+
+    <script>
+
+async function loadCheckout(){
+
+    try{
+
+        const response = await fetch('/cart');
+        const data = await response.json();
+
+        let html = '';
+        let total = 0;
+
+        data.forEach(item => {
+
+            const subtotal =
+                item.price * item.quantity;
+
+            total += subtotal;
+
+            html += `
+            <tr>
+                <td>${item.item_name}</td>
+                <td>${item.price}</td>
+                <td>${item.quantity}</td>
+                <td>${subtotal}</td>
+            </tr>
+            `;
+
+        });
+
+        document.getElementById('cartTable')
+            .innerHTML = html;
+
+        document.getElementById('totalPrice')
+            .innerText = total;
+
+    }
+    catch(err){
+
+        console.log(err);
+
+    }
+
+}
+
+document.querySelector('.customer-form')
+.addEventListener('submit', async function(e){
+
+    e.preventDefault();
+
+    try{
+
+        const response = await fetch('/place-order', {
+    method:'POST'
+});
+
+const result = await response.text();
+
+alert(result);
+
+localStorage.setItem(
+    'paymentTotal',
+    document.getElementById('totalPrice').innerHTML
+);
+
+console.log(
+    document.getElementById('totalPrice').innerHTML
+);
+
+window.location.href = 'payment.html';
+
+    }
+    catch(err){
+
+        console.log(err);
+
+    }
+
+});
+
+loadCheckout();
+
+</script>
+
+</body>
+</html>
+
+                

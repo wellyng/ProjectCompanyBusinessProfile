@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BebekCarok</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <!-- NAVBAR -->
+<nav class="navbar">
+
+    <div class="logo">
+        BebekCarok
+    </div>
+
+    <ul class="nav-links">
+
+        <li><a href="#home">Home</a></li>
+
+        <li><a href="#products">Products</a></li>
+
+        <li><a href="#about">About</a></li>
+
+        <li><a href="#services">Services</a></li>
+
+    </ul>
+
+</nav>
+</ul>
+
+
+    <!-- HERO -->
+<section id="home" class="hero">
+
+    <div class="hero-content">
+
+        <h1>Welcome to BebekCarok</h1>
+
+        <p>
+            Delicious food delivered fast to your home
+        </p>
+
+        <a href="#products">
+            <button class="hero-btn">
+                Order Now
+            </button>
+        </a>
+
+        <a href="Pages/customer-login.html" id="loginLink">
+            <button class="hero-btn">
+                Customer Login
+            </button>
+        </a>
+
+        <a href="Pages/admin-login.html">
+            <button class="hero-btn">
+                Admin Login
+            </button>
+        </a>
+
+    </div>
+
+</section>
+
+
+    <!-- PRODUCTS -->
+    <section id="products" class="products-section">
+
+        <h2>Popular Menu</h2>
+
+        <div class="products-container">
+
+            <!-- PRODUCT 1 -->
+            <div class="product-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop"
+                    alt="Kerupuk">
+
+                <h3>Ikan Bakar</h3>
+
+                <p>Rp 20200</p>
+
+                <button onclick="addToCart('Ikan Bakar', 20200)">
+                    Add To Cart
+                </button>
+
+            </div>
+
+
+            <!-- PRODUCT 2 -->
+            <div class="product-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1200&auto=format&fit=crop"
+                    alt="Piscok">
+
+                <h3>Nasi Goreng</h3>
+
+                <p>Rp 18000</p>
+
+                <button onclick="addToCart('Nasi Goreng', 18000)">
+                    Add To Cart
+                </button>
+
+            </div>
+
+
+            <!-- PRODUCT 3 -->
+            <div class="product-card">
+
+                <img
+                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop"
+                    alt="Tempe">
+
+                <h3>Tempe Tahu Carok</h3>
+
+                <p>Rp 18900</p>
+
+                <button onclick="addToCart('Tempe Tahu Carok', 18900)">
+                    Add To Cart
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT -->
+    <section id="about" class="about-section">
+
+        <h2>About Us</h2>
+
+        <p>
+            BebekCarok is a modern food ordering website
+            with fast delivery and delicious food.
+        </p>
+
+    </section>
+
+
+    <!-- SERVICES -->
+    <section id="services" class="services-section">
+
+        <h2>Our Services</h2>
+
+        <div class="services-container">
+
+            <div class="service-box">
+
+                <h3>Fast Delivery</h3>
+
+                <p>
+                    Food arrives quickly and safely.
+                </p>
+
+            </div>
+
+            <div class="service-box">
+
+                <h3>Fresh Ingredients</h3>
+
+                <p>
+                    We use fresh ingredients everyday.
+                </p>
+
+            </div>
+
+            <div class="service-box">
+
+                <h3>Online Ordering</h3>
+
+                <p>
+                    Easy online ordering system.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p>
+            © 2026 BebekCarok. All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script>
+
+    async function addToCart(name, price) {
+
+        try {
+
+            const response = await fetch('/add-cart', {
+
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body: JSON.stringify({
+                    item_name: name,
+                    price: price,
+                    quantity: 1
+                })
+
+            });
+
+            const result = await response.text();
+
+console.log(result);
+
+if(result === 'success'){
+
+    const lihatCart = confirm(
+        name + ' berhasil ditambahkan ke Cart!\n\nKlik OK untuk melihat Checkout.'
+    );
+
+    if(lihatCart){
+
+        window.location.href =
+            '/Pages/checkout.html';
+
+    }
+
+}
+
+//loadCart();
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+    }
+
+    async function loadCart() {
+
+        try {
+
+            const response = await fetch('/cart');
+
+            const data = await response.json();
+
+            console.log(data);
+
+            const cartDiv = document.getElementById('cart-items');
+
+            cartDiv.innerHTML = '';
+
+            if (data.length === 0) {
+
+                cartDiv.innerHTML = `
+                    <h3 style="color:white;">
+                        Cart kosong
+                    </h3>
+                `;
+
+                return;
+            }
+
+            data.forEach(item => {
+
+                cartDiv.innerHTML += `
+
+                    <div class="cart-item">
+
+                        <h3>${item.item_name}</h3>
+
+                        <p>Rp ${item.price}</p>
+
+                        <p>Quantity: ${item.quantity}</p>
+
+                        <button onclick="deleteItem(${item.id})">
+                            Delete
+                        </button>
+
+                    </div>
+
+                `;
+
+            });
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+    }
+
+    async function deleteItem(id) {
+
+        try {
+
+            await fetch('/delete-cart/' + id, {
+
+                method: 'DELETE'
+
+            });
+
+            loadCart();
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+    }
+
+    //loadCart();
+
+</script>
+
+<script>
+
+window.onload = function(){
+
+    if(localStorage.getItem('isLogin') === 'true'){
+
+        const loginLink =
+            document.getElementById('loginLink');
+
+        if(loginLink){
+
+            loginLink.innerHTML = `
+                <button class="hero-btn"
+                    onclick="logout()">
+                    Logout
+                </button>
+            `;
+
+        }
+
+    }
+
+}
+
+function logout(){
+
+    localStorage.removeItem('isLogin');
+
+    location.reload();
+
+}
+
+</script>
+
+</body>
+
+</html>
